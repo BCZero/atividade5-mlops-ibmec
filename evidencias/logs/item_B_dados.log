@@ -1,0 +1,33 @@
+﻿=== ITEM B: Dados colocados no repositorio ===
+Data: 2026-09-15 15:56:07
+
+--- docker/data/ ---
+
+Name               Length
+----               ------
+bos_sinteticos.csv   5773
+
+
+
+--- dados_grupo4/ ---
+
+Name                              Length
+----                              ------
+bos_sinteticos_aula05.csv           5773
+bos_sinteticos_sujo_aula05.csv      6048
+ocorrencias_sinteticas_grupo4.csv   9343
+
+
+
+--- retreino/ ---
+
+Name                     Length
+----                     ------
+bos_sinteticos_ruido.csv   5850
+bos_sinteticos_v2.csv      7887
+comparar_metricas.py       1664
+gerar_dado_ruidoso.py      1651
+novos_bos_lote2.csv        2097
+
+
+
