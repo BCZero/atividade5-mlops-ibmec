@@ -14,18 +14,18 @@ Ultima revisao: 2026-09-15 19:17 (handoff para computador pessoal)
 > GitHub. A continuacao deve ser feita no **computador pessoal**, que tem Docker
 > funcionando. Clone o repositorio e siga a partir do Item C.
 
-### O que ja foi feito (computador MBA)
+### O que ja foi feito
 
 | Item | Descricao | Status |
 |------|-----------|--------|
 | A | Criar repositorio de teste + `git init` + commit inicial | ✅ CONCLUIDO |
 | B | Dados do material colocados no repositorio | ✅ CONCLUIDO |
-| C | Docker build da imagem | ⛔ Nao executado (Docker Desktop com falha) |
-| D | Rodar imagem Docker | ⛔ Nao executado |
-| E | Kind instalado (v0.29.0) / cluster nao criado | 🔧 Kind OK, cluster pendente |
-| F | Rodar Terraform | ⏳ PENDENTE |
-| G | Deploy + replicas | ⏳ PENDENTE |
-| H | Opcional com dados alterados | ⏳ PENDENTE |
+| C | Docker build da imagem | ✅ CONCLUIDO |
+| D | Rodar imagem Docker (Acuracia ~91.67%) | ✅ CONCLUIDO |
+| E | Kind instalado (v0.29.0) / cluster `aula07-mlops` criado | ✅ CONCLUIDO |
+| F | Rodar Terraform (Namespace, Secret, ConfigMap) | ✅ CONCLUIDO |
+| G | Deploy + replicas (3 pods demo-nginx em Running) | ✅ CONCLUIDO |
+| H | Opcional com dados alterados (v2 - acuracia 35.29%) | ✅ CONCLUIDO |
 
 ### O que esta pronto no repositorio
 
@@ -144,12 +144,12 @@ brew install kind
 |------|-----------|--------|
 | A | Criar repositorio de teste | ✅ CONCLUIDO |
 | B | Colocar os dados no repositorio | ✅ CONCLUIDO |
-| C | Docker build da imagem | ⛔ PENDENTE (computador pessoal) |
-| D | Rodar imagem Docker | ⛔ PENDENTE (computador pessoal) |
-| E | Kind instalado / cluster pendente | 🔧 PARCIAL |
-| F | Rodar Terraform | ⏳ PENDENTE |
-| G | Deploy + replicas | ⏳ PENDENTE |
-| H | Opcional com dados alterados | ⏳ PENDENTE |
+| C | Docker build da imagem (`aula7-mlops-pcdf:local`) | ✅ CONCLUIDO |
+| D | Rodar imagem Docker e salvar log | ✅ CONCLUIDO |
+| E | Kind instalado / cluster `aula07-mlops` criado | ✅ CONCLUIDO |
+| F | Rodar Terraform (Namespace, Secret, ConfigMap) | ✅ CONCLUIDO |
+| G | Deploy + 3 replicas em Running | ✅ CONCLUIDO |
+| H | Opcional com dados v2 e retreino | ✅ CONCLUIDO |
 
 ### Ferramentas no computador MBA (para referencia)
 
@@ -850,36 +850,17 @@ enunciado. Portanto:
 4. **[✅ FEITO]** Corrigir `Atividade_5/terraform/providers.tf`
    → `kd3-aula07-mlops` substituido por `kind-aula07-mlops`
 5. **[✅ FEITO]** Kind v0.29.0 instalado no Windows
-6. **[⛔ BLOQUEADO]** Resolver Docker Desktop (ver Secao 12), depois:
-   ```powershell
-   cd Atividade_5\docker
-   docker build -t aula7-mlops-pcdf:local .
-   docker run --rm aula7-mlops-pcdf:local
-   ```
-7. **[PENDENTE]** Subir Kind cluster:
-   ```powershell
-   cd Atividade_5\kind
-   kind create cluster --name aula07-mlops --config kind-config.yaml
-   kubectl config current-context
-   kubectl get nodes
-   ```
-8. **[PENDENTE]** Rodar Terraform:
-   ```powershell
-   cd Atividade_5\terraform
-   terraform init
-   terraform validate
-   terraform plan
-   terraform apply -auto-approve
-   terraform output
-   ```
-9. **[PENDENTE]** Aplicar deploy e escalar replicas:
-   ```powershell
-   kubectl apply -f Atividade_5\kind\deployment_exemplo.yaml
-   kubectl scale deployment/demo-nginx -n mlops --replicas=3
-   kubectl get pods -n mlops -o wide
-   ```
-10. Salvar logs e prints em `Atividade_5\evidencias\`
-11. Opcional Item H: rebuild com `bos_sinteticos_v2.csv`
+6. **[✅ FEITO]** Docker build & run (`aula7-mlops-pcdf:local`)
+   → Log salvo em `evidencias/logs/docker_run_metricas.log` (Acuracia ~91.67%)
+7. **[✅ FEITO]** Subir Kind cluster (`aula07-mlops`)
+   → 1 control-plane + 1 worker em estado `Ready`
+8. **[✅ FEITO]** Rodar Terraform
+   → Created namespace `mlops`, secret `app-credentials`, configmap `app-config`
+9. **[✅ FEITO]** Aplicar deploy e escalar replicas
+   → Deployment `demo-nginx` com 3 replicas em `Running`
+10. **[✅ FEITO]** Salvar logs e evidencias em `evidencias/logs/`
+11. **[✅ FEITO]** Opcional Item H: rebuild com `bos_sinteticos_v2.csv`
+    → Log salvo em `evidencias/logs/docker_run_v2_metricas.log` (Acuracia ~35.29%)
 12. Gerar relatorio PDF final
 
 ## 10. Riscos e cuidados
