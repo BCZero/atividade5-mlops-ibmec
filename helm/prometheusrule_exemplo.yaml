@@ -1,0 +1,31 @@
+# Aula 07 -- Bloco 3, exercício de alerta. Usa a métrica "up" (existe
+# SEMPRE, pra qualquer target monitorado -- 1 = alvo respondendo, 0 = alvo
+# fora do ar), então funciona garantido em qualquer cluster, sem precisar
+# de nenhum serviço extra rodando. Em produção, o mesmo padrão se aplica a
+# métricas de latência de inferência (ex.: histogram_quantile em cima de um
+# histograma de tempo de resposta) ou a métricas de drift.
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: aula07-alertas-demo
+  namespace: monitoring
+  labels:
+    release: kube-prom-stack # precisa bater com o label que o chart usa
+    # pra descobrir PrometheusRules -- confira com:
+    # kubectl get prometheus -n monitoring -o jsonpath='{.items[0].spec.ruleSelector}'
+spec:
+  groups:
+    - name: aula07.disponibilidade
+      rules:
+        - alert: AlvoForaDoAr
+          expr: up == 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Target {{ $labels.job }} está fora do ar"
+            description: >-
+              O Prometheus não conseguiu coletar métricas de
+              {{ $labels.instance }} (job {{ $labels.job }}) nos últimos
+              1 minuto. Em produção, um alerta equivalente cobriria
+              latência de inferência do modelo acima de um limiar.

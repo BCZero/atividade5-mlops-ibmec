@@ -1,0 +1,6 @@
+# Aula 07 -- dependencias pra compilar/testar/disparar a pipeline a partir
+# do laptop (self-hosted runner). Instale com:
+#   pip install -r requirements-dev.txt --break-system-packages
+kfp==2.17.0
+pyyaml==6.0.2
+pytest==9.1.1

@@ -1,0 +1,38 @@
+# Aula 07 -- values customizados do chart kube-prometheus-stack, pensados
+# pra caber confortavel num cluster Kind rodando no laptop (o chart padrão
+# pede bem mais CPU/memória do que um laptop de aula tem sobrando).
+grafana:
+  adminPassword: "aula07admin" # só para a demo -- NUNCA faça isso em produção
+  service:
+    type: ClusterIP # acesso via kubectl port-forward (Passo B3-1)
+
+prometheus:
+  prometheusSpec:
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+    retention: 6h # cluster de aula, não precisa reter dias de métricas
+
+alertmanager:
+  enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+
+# Desliga alguns exporters/regras pesadas que não fazem sentido num Kind
+# de laptop (ex.: métricas de nó físico específicas de cloud provider).
+kubeEtcd:
+  enabled: false
+kubeControllerManager:
+  enabled: false
+kubeScheduler:
+  enabled: false

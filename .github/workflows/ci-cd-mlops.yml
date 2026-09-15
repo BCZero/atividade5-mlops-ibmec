@@ -1,0 +1,94 @@
+# Aula 07 -- CI/CD/CT completo e LOCAL: testa a pipeline, builda e pusha a
+# imagem Docker, e dispara um run de verdade no Kubeflow Pipelines rodando
+# no SEU cluster Kind -- tudo isso sem nenhum passo na nuvem.
+#
+# ATENÇÃO -- runs-on: self-hosted:
+#   Isso roda no SEU laptop (o runner que você registrou no Passo B4-2),
+#   NÃO num runner hospedado pelo GitHub -- é a única forma do Actions
+#   alcançar um cluster Kind que só existe na sua máquina/rede local.
+#   Por isso, e por segurança (self-hosted runner com acesso à sua máquina),
+#   SÓ use isso em repositórios PRIVADOS -- ver aviso no LEIA-ME.
+#
+# Versões conferidas em 30/08/2026: actions/checkout@v5, docker/login-action@v4,
+# docker/build-push-action@v6, kfp==2.17.0. Confira sempre a mais recente em
+# github.com/<owner>/<repo>/releases antes de reusar este arquivo.
+name: CI/CD/CT - Pipeline MLOps PCDF (local, Aula 07)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: {} # também dá pra disparar manualmente pela aba Actions
+
+env:
+  IMAGE_NAME: SEU-USUARIO-DOCKERHUB/aula7-mlops-pcdf
+
+jobs:
+  # ---------------------------------------------------------------
+  # CI -- testes rápidos (compila a pipeline, pega erro de sintaxe cedo)
+  # ---------------------------------------------------------------
+  testar:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v5
+
+      - name: Instalar dependências de teste
+        run: pip install -r pipeline/requirements-dev.txt --break-system-packages
+
+      - name: Compilar a pipeline (smoke test)
+        working-directory: pipeline
+        run: pytest test_pipeline_compila.py -v
+
+  # ---------------------------------------------------------------
+  # CD -- builda e pusha a imagem Docker (só depois do CI passar)
+  # ---------------------------------------------------------------
+  build-e-push-imagem:
+    needs: testar
+    runs-on: self-hosted
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v5
+
+      - name: Login no Docker Hub
+        uses: docker/login-action@v4
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build + push da imagem
+        uses: docker/build-push-action@v6
+        with:
+          context: docker
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:latest
+            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+  # ---------------------------------------------------------------
+  # CT -- dispara a pipeline de verdade no Kubeflow (cluster Kind local)
+  # ---------------------------------------------------------------
+  treinar-e-avaliar:
+    needs: build-e-push-imagem
+    runs-on: self-hosted
+    steps:
+      - name: Checkout do repositório
+        uses: actions/checkout@v5
+
+      - name: Instalar dependências
+        run: pip install -r pipeline/requirements-dev.txt --break-system-packages
+
+      - name: Abrir port-forward pro Kubeflow Pipelines (em background)
+        run: |
+          kubectl port-forward -n kubeflow svc/ml-pipeline 8888:8888 &
+          echo "PORT_FORWARD_PID=$!" >> "$GITHUB_ENV"
+          sleep 5 # dá tempo do port-forward subir antes do próximo step
+
+      - name: Disparar a pipeline e aguardar o resultado
+        working-directory: pipeline
+        run: python3 disparar_pipeline.py
+
+      - name: Encerrar o port-forward
+        if: always()
+        run: kill "$PORT_FORWARD_PID" 2>/dev/null || true

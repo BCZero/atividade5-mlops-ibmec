@@ -1,0 +1,16 @@
+id,texto_relato,natureza,bairro,turno,dia_semana,houve_violencia,valor_prejuizo_reais,idade_vitima,reincidencia
+41,Comunicante relata agressao fisica por parte de companheiro durante discussao domestica,Violencia Domestica,Ceilândia,Noite,Sexta,True,0,29,True
+42,Vitima relata ter sido agredida pelo companheiro na frente dos filhos,Violencia Domestica,Samambaia,Noite,Sábado,True,0,34,True
+43,Comunicante relata agressao fisica por parte de companheiro apos discussao,Violencia Domestica,Taguatinga,Madrugada,Domingo,True,0,41,False
+44,Vitima procura delegacia com lesoes visiveis apos briga domestica,Violencia Domestica,Planaltina,Noite,Quarta,True,0,38,True
+45,Comunicante relata agressao fisica reiterada por parte do companheiro,Violencia Domestica,Gama,Tarde,Segunda,True,0,45,True
+46,Vitima relata ter sido empurrada e agredida pelo companheiro dentro de casa,Violencia Domestica,Sobradinho,Noite,Sexta,True,0,27,False
+47,Comunicante relata discussao domestica sem contato fisico entre o casal,Violencia Domestica,Águas Claras,Tarde,Terça,False,0,52,False
+48,Vitima relata ameaças verbais do companheiro sem agressao fisica,Violencia Domestica,Asa Sul,Manhã,Quinta,False,0,48,False
+49,Comunicante relata furto de bicicleta deixada sem cadeado em area comum,Furto,Guará,Tarde,Sábado,False,890.5,44,False
+50,Vitima relata ter sido abordada e ter celular levado mediante ameaca,Roubo,Ceilândia,Noite,Sexta,True,1200.0,33,False
+51,Comunicante relata trafico de drogas em ponto conhecido do bairro,Trafico de Drogas,Samambaia,Madrugada,Sábado,False,0,,False
+52,Vitima relata golpe de falso emprego com cobranca antecipada de taxa,Estelionato,Taguatinga,Tarde,Quarta,False,650.0,29,False
+53,Comunicante relata perturbacao do sossego por obra irregular no periodo noturno,Perturbacao do Sossego,Asa Norte,Noite,Segunda,False,0,66,False
+54,Vitima relata agressao fisica por desconhecido apos discussao de transito,Lesao Corporal,Gama,Tarde,Sexta,True,0,52,False
+55,Comunicante relata desaparecimento de adolescente ha 2 dias,Pessoa Desaparecida,Planaltina,Manhã,Terça,False,0,16,False

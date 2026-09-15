@@ -1,0 +1,5 @@
+# Aula 07 -- dependencias da imagem Docker do pipeline (extracao/limpeza/treino/avaliacao/salvar modelo)
+pandas==2.3.3
+scikit-learn==1.7.2
+kfp==2.17.0
+joblib==1.4.2

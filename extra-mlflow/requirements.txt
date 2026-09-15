@@ -1,0 +1,4 @@
+# versões conferidas em 30/08/2026
+mlflow==3.15.2
+pandas==2.3.3
+scikit-learn==1.7.2

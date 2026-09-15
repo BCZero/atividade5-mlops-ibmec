@@ -1,0 +1,66 @@
+# Aula 07 -- Passo B2-3: exemplo minimo de Deployment + Service, aplicado
+# DENTRO do namespace "mlops" criado pelo Terraform (Passo B2-2). Usa uma
+# imagem publica leve (nginx) só pra demonstrar o ciclo de vida do
+# Kubernetes -- não tem relação com o modelo de ML (isso vem no Bloco 4).
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-nginx
+  namespace: mlops
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo-nginx
+  template:
+    metadata:
+      labels:
+        app: demo-nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:1.27-alpine
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "128Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-nginx
+  namespace: mlops
+spec:
+  selector:
+    app: demo-nginx
+  ports:
+    - port: 80
+      targetPort: 80
+
+---
+# Ingress -- só como REFERÊNCIA de sintaxe (não aplicamos hoje: exigiria
+# instalar um Ingress Controller, ex.: ingress-nginx, e configurar o Kind
+# com extraPortMappings -- ver kind.sigs.k8s.io/docs/user/ingress se quiser
+# fazer isso depois da aula, como estudo extra).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: demo-nginx
+  namespace: mlops
+spec:
+  ingressClassName: nginx
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: demo-nginx
+                port:
+                  number: 80

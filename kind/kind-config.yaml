@@ -1,0 +1,12 @@
+# Aula 07 -- cluster Kind (Kubernetes IN Docker): 1 control-plane + 1 worker.
+# Dois nós só para dar pra ver o kubectl distribuindo pods entre máquinas
+# de verdade (mesmo sendo containers Docker no seu laptop) -- um nó só
+# também funciona, mas fica menos didático de mostrar em aula.
+#
+# Uso: kind create cluster --name aula07-mlops --config kind-config.yaml
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+name: aula07-mlops
+nodes:
+  - role: control-plane
+  - role: worker
